@@ -22,13 +22,13 @@ This application reads data from a SQLite database, performs exploratory data an
 1. I created a Github repository to share my application and documentation.
 2. The application's directory structure was setup using the following commands. 
 '''
-    # open project directory 
+    ### open project directory 
     cd sqlite_to_analysis_app
 
-    # create subdirectories
+    ### create subdirectories
     mkdir data eda model output scripts utils
 
-    # create placeholder files in subdirectories. README.md already created from Github repo creation
+    ### create placeholder files in subdirectories. README.md already created from Github repo creation
     touch data/database.sqlite
     touch eda/eda_analysis.py
     touch model/model_dev.py
@@ -37,25 +37,26 @@ This application reads data from a SQLite database, performs exploratory data an
     touch utils/db_utils.py
     touch utils/markdown_writer.py
     
-    # reinitialize git repo 
+    ### reinitialize git repo 
     git init
 
-    # add all newly created files to git
+    ### add all newly created files to git
     git add .
 
-    # commit the initial app structure
+    ### commit the initial app structure
     git commit -m "Initial application structure setup"
 
-    # create .gitignore file to exclude unnecessary files
+    ### create .gitignore file to exclude unnecessary files
     echo "output/results.md" >> .gitignore
 
-    # add .gitignore file to git
+    ### add .gitignore file to git
     git add .gitignore
     git commit -m "add .gitignore"
 
-    # link to repo
+    ### link to repo
     https://github.com/meganrashid/sqlite_to_analysis_app
 '''
 
 ## Inspect the data
-1. 
+You can follow my thought process and steps to clean the data in the data\database_check.ipynb notebook. 
+
