@@ -18,6 +18,11 @@ print(f"base directory: {base_dir}")
 db_path = os.path.join(base_dir, 'data', 'combined_data.db')
 print(f"Database path: {db_path}")
 
+# get output directory
+output_path = os.path.join(base_dir, 'output')
+print(f"Query Results Will be Saved at: {output_path}")
+
+
 #connect to the database
 conn = db.connect_to_db(db_path)
 
@@ -68,9 +73,6 @@ db.run_query(conn, '''
                     )
                     '''
              )
-
-#check table names in database
-print(f"tables in database: {db.run_query(conn,"SELECT name FROM sqlite_master WHERE type='table'")}")
 
 # insert merged data from companyDataset and CompanyClassification to new table
 db.run_query(conn, '''
