@@ -12,6 +12,7 @@ This application reads data from a SQLite database, performs exploratory data an
 - time
 - sys, os
 - subprocess
+- nltk
 
 ### Directory
 ```bash
@@ -65,6 +66,7 @@ sqlite_to_analysis_app/
     touch eda/eda_analysis.py
     touch model/model_dev.py
     touch output/results.md
+    touch scripts/clean_data.py
     touch scripts/generate_report.py
     touch utils/db_utils.py
     touch utils/markdown_writer.py
@@ -92,5 +94,11 @@ sqlite_to_analysis_app/
 ## Inspect the data
 You can follow my thought process and steps to clean the data in the data\database_check.ipynb notebook. 
 
+## Task 1: SQL Queries
+This is done while running generate_reports.py. Results of queries are saved to Excel files under the output folder.
 
+## Task 2: Data Integration and Database Insertion
+I rename columns, add indexes, create a new table CompanyMerged and insert results of query into that table in clean_data.py.
 
+## Task 3: EDA
+You can follow my development process in eda\eda.ipynb. The application executes the EDA in eda_analysis.py. 
