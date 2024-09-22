@@ -14,7 +14,7 @@ This application reads data from a SQLite database, performs exploratory data an
 - subprocess
 
 ### Directory
-
+```bash
 sqlite_to_analysis_app/
 │
 ├── data/
@@ -38,14 +38,14 @@ sqlite_to_analysis_app/
 │   └── db_utils.py         # contains the database utility functions
 │
 └── README.md
-
+```
 
 ### How to Run
 1. Place your SQLite database in the `data/` folder. Must contain the tables CompanyDataset and CompanyClassification
 2. Run the following command to generate the report:
-   ```bash
+```bash
    python scripts/generate_report.py
-
+```
 
 
 # Development Summary
@@ -53,7 +53,7 @@ sqlite_to_analysis_app/
 ## Setup
 1. I created a Github repository to share my application and documentation.
 2. The application's directory structure was setup using the following commands. 
-'''
+```bash
     ### open project directory 
     cd sqlite_to_analysis_app
 
@@ -87,7 +87,7 @@ sqlite_to_analysis_app/
 
     ### link to repo
     https://github.com/meganrashid/sqlite_to_analysis_app
-'''
+```
 
 ## Inspect the data
 You can follow my thought process and steps to clean the data in the data\database_check.ipynb notebook. 
