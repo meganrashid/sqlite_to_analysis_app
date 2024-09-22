@@ -140,6 +140,7 @@ c_re = re.compile('(%s)' % '|'.join(c_dict.keys()))
 
 stopwords = list(set(stopwords.words('english')))
 add_stopwords = ['sep','',' ','say', 's', 'u', 'ap', 'afp', '...', 'n', '\\','"',"'","'s",'us','get','ã¢â‚¬â','new']
+stopwords.append(add_stopwords)
 
 punc = list(set(string.punctuation))
 pattern = r"(?u)\b\w\w+\b" 
