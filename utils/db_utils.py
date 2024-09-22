@@ -5,18 +5,35 @@ import os
 
 
 def connect_to_db(db_path):
-    """Connect to SQLite database."""
+    """Connect to SQLite database.
+
+    Args:
+    - db_path (str): path to database file
+
+    Example: "C:/Users/megan/OneDrive/Documents/GitHub/sqlite_to_analysis_app/data/combined_data.db"
+    """
     conn = sqlite3.connect(db_path)
     return conn
 
 def run_query(conn, query):
-    """Run a SQL query and return the result."""
+    """Run a SQL query and return the result.
+    
+    Args:
+    - db_path (str): path to database file
+
+    Example: "C:/Users/megan/OneDrive/Documents/GitHub/sqlite_to_analysis_app/data/combined_data.db"
+    """
     cursor = conn.cursor()
     cursor.execute(query)
     return cursor.fetchall()
 
 def time_query(conn, query):
-    """Time the execution of a query on the SQLite database."""
+    """Time the execution of a query on the SQLite database.
+    
+    Args:
+    - conn (str): connection string variable
+    - query (str): string of SQLite query
+    """
     cursor = conn.cursor()
     start_time = time.time()  # Record the start time
     cursor.execute(query)
@@ -105,11 +122,11 @@ def query_to_excel(conn, output_dir, query, output_filename='query_results.xlsx'
     """
     Runs a query on the SQLite database to pandas DF then saves the results to an Excel file in the output folder.
     
-    Parameters:
-    - conn: str, created from connect_to_db function
-    - output_dir: str, path to output file directory
-    - query: str, the SQL query to run.
-    - output_filename: str, the filename for the output Excel file (default is 'query_results.xlsx').
+    Args:
+    - conn (str): created from connect_to_db function
+    - output_dir (str): path to output file directory
+    - query (str): the SQL query to run.
+    - output_filename (str): the filename for the output Excel file (default is 'query_results.xlsx').
     
     Returns:
     - str, path to the saved Excel file.
