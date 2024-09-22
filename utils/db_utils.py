@@ -1,5 +1,8 @@
 import sqlite3
 import time
+import pandas as pd
+import os
+
 
 def connect_to_db(db_path):
     """Connect to SQLite database."""
@@ -93,6 +96,40 @@ def create_indexes(conn, indexes_to_create):
             cursor.execute(query)
             print(f"Created index: {index_name} on {table}({column})")
     
-    # Commit and close the connection
+    # Commit
     conn.commit()
 
+
+
+def query_to_excel(conn, output_dir, query, output_filename='query_results.xlsx'):
+    """
+    Runs a query on the SQLite database to pandas DF then saves the results to an Excel file in the output folder.
+    
+    Parameters:
+    - conn: str, created from connect_to_db function
+    - output_dir: str, path to output file directory
+    - query: str, the SQL query to run.
+    - output_filename: str, the filename for the output Excel file (default is 'query_results.xlsx').
+    
+    Returns:
+    - str, path to the saved Excel file.
+    """
+    # Construct the path to the output folder
+    # base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+    # output_dir = os.path.join(base_dir, 'output')
+    # print(output_dir)
+    
+    # Run the query and fetch the result into a DataFrame
+    df = pd.read_sql_query(query, conn)
+    
+    # Ensure the output folder exists
+    os.makedirs(output_dir, exist_ok=True)
+    
+    # Construct the full path for the output Excel file
+    output_path = os.path.join(output_dir, output_filename)
+    
+    # Write the DataFrame to an Excel file
+    df.to_excel(output_path, index=False)
+    
+    print(f"Query results successfully saved to: {output_path}")
+    return output_path
