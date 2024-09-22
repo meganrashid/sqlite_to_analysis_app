@@ -1,3 +1,4 @@
+import subprocess
 import os
 import sys
 import pandas as pd
@@ -8,7 +9,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'u
 # Now you can import the db_utils module
 import db_utils as db
 
-# set up params
+###################################### set up params #######################################################
 
 # get the base directory
 base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -16,13 +17,37 @@ base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 # get data path
 db_path = os.path.join(base_dir, 'data', 'combined_data.db')
 
-#connect to the database
-conn = db.connect_to_db(db_path)
+def run_clean_data_script():
+    """
+    Execute the clean_data.py script located in the scripts folder.
+    """
+    # Get the absolute path to the clean_data.py script
+    clean_data_script = os.path.join(base_dir,'scripts','clean_data.py')
+    
+    try:
+        # Execute the clean_data.py script using subprocess
+        result = subprocess.run(['python', clean_data_script], check=True, capture_output=True, text=True)
+        
+        # If the script runs successfully, print the output
+        print("clean_data.py script output:")
+        print(result.stdout)
+    except subprocess.CalledProcessError as e:
+        print(f"Error occurred while running clean_data.py: {e}")
+        print(e.stderr)
+
+# Example usage
+if __name__ == "__main__":
+    run_clean_data_script()
+    # After running clean_data.py, you can add further code to generate the report
+
 
 ############################################ SQL QUERIES ####################################################
 # get output directory
 output_path = os.path.join(base_dir, 'output')
 print(f"Query Results Will be Saved at: {output_path}")
+
+#connect to the database
+conn = db.connect_to_db(db_path)
 
 # 1.  Find the Top 10 industries with the highest average number of employees, only considering companies
 # founded after 2000 that have more than 10 employees
