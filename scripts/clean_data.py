@@ -47,5 +47,65 @@ indexes_to_create = {
 db.create_indexes(conn, indexes_to_create)
 
 # check table structure and column names
-
 print(db.run_query(conn,"PRAGMA table_info('CompanyDataset');"))
+
+# create new table for modeling
+db.run_query(conn, '''
+                    CREATE TABLE IF NOT EXISTS CompanyMerged (
+                     Company_ID INTEGER PRIMARY KEY
+                     ,CompanyName TEXT NOT NULL
+                     ,Website TEXT NOT NULL
+                     ,Industry TEXT
+                     ,Size_Range TEXT
+                     ,Category TEXT NOT NULL
+                     ,homepage_text TEXT NOT NULL
+                     ,h1 TEXT
+                     ,h2 TEXT
+                     ,h3 TEXT
+                     ,nav_link_text TEXT
+                     ,meta_keywords TEXT
+                     ,meta_description TEXT
+                    )
+                    '''
+             )
+
+#check table names in database
+print(f"tables in database: {db.run_query(conn,"SELECT name FROM sqlite_master WHERE type='table'")}")
+
+# insert merged data from companyDataset and CompanyClassification to new table
+db.run_query(conn, '''
+                    INSERT INTO CompanyMerged
+                    SELECT 
+                        cd.Company_ID
+                        ,cd.CompanyName
+                        ,cd.Website
+                        ,cd.Industry
+                        ,cd.Size_Range
+                        ,cc.Category
+                        ,cc.homepage_text
+                        ,cc.h1
+                        ,cc.h2
+                        ,cc.h3
+                        ,cc.nav_link_text
+                        ,cc.meta_keywords
+                        ,cc.meta_description
+                    FROM CompanyDataset as cd
+                    INNER JOIN CompanyClassification as cc
+                        ON cd.Website=cc.Website
+                        and cc.Website is not null
+                    WHERE cd.Website is not null
+                    and cd.CompanyName is not null
+                    and cc.homepage_text is not null
+                    ''')
+
+
+
+
+# create indexes for new table
+indexes_to_create = {
+    'CompanyMerged': ['Company_ID','CompanyName', 'Website','Industry','Category']
+}
+
+db.create_indexes(conn, indexes_to_create)
+
+print("Table ready for preprocessing and modeling")
