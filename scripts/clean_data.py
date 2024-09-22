@@ -62,6 +62,10 @@ db.run_query(conn, '''
                      ,Website TEXT NOT NULL
                      ,Industry TEXT
                      ,Size_Range TEXT
+                     ,Locality TEXT
+                     ,Country TEXT
+                     ,Current_Employee_Estimate INTEGER
+                     ,Total_Employee_Estimate INTEGER
                      ,Category TEXT NOT NULL
                      ,homepage_text TEXT NOT NULL
                      ,h1 TEXT
@@ -83,6 +87,10 @@ db.run_query(conn, '''
                         ,cd.Website
                         ,cd.Industry
                         ,cd.Size_Range
+                        ,cd.Locality
+                        ,cd.Country
+                        ,cd.Current_Employee_Estimate
+                        ,cd.Total_Employee_Estimate
                         ,cc.Category
                         ,cc.homepage_text
                         ,cc.h1
