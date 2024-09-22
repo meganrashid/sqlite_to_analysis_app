@@ -3,7 +3,12 @@ import sys
 import pandas as pd
 
 # Construct the absolute path to the utils directory and append it to sys.path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'utils')))
+# sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'utils')))
+utils_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'utils'))
+
+# Only add the utils_path if it's not already in sys.path
+if utils_path not in sys.path:
+    sys.path.append(utils_path)
 
 # Now you can import the db_utils module
 import db_utils as db
