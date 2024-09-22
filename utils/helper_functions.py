@@ -139,11 +139,11 @@ c_dict = {
 c_re = re.compile('(%s)' % '|'.join(c_dict.keys()))
 
 stopwords = list(set(stopwords.words('english')))
-add_stopwords = ['sep','',' ','say', 's', 'u', 'ap', 'afp', '...', 'n', '\\','"',"'","'s",'us','get','ã¢â‚¬â','new']
-stopwords.append(add_stopwords)
+add_stopwords = ['sep','say', 's', 'u', 'ap', 'afp', 'n','us','get','new','services','service','help','contact','company','call','view','best','home']
+stopwords.extend(add_stopwords)
 
 punc = list(set(string.punctuation))
-pattern = r"(?u)\b\w\w+\b" 
+punc.extend(['\\','\"','',' ','...','ã¢â‚¬â','\'','\'s','-','--',"''",'\``',"’"])
 
 lemmatizer = WordNetLemmatizer()
 
@@ -220,15 +220,18 @@ def get_word_net_pos(treebank_tag):
     else:
         return None
     
-def lemma_wordnet(tagged_text):
-    final = []
-    for word, tag in tagged_text:
-        wordnet_tag = get_word_net_pos(tag)
-        if wordnet_tag is None:
-            final.append(lemmatizer.lemmatize(word))
-        else:
-            final.append(lemmatizer.lemmatize(word, pos=wordnet_tag))
-    return final
+# def lemma_wordnet(tagged_text):
+#     final = []
+#     for word, tag in tagged_text:
+#         wordnet_tag = get_word_net_pos(tag)
+#         if wordnet_tag is None:
+#             final.append(lemmatizer.lemmatize(word))
+#         else:
+#             final.append(lemmatizer.lemmatize(word, pos=wordnet_tag))
+#     return final
+
+def lemmatize_text(text):
+    return [lemmatizer.lemmatize(w) for w in word_tokenize(text)]
 
 def process_text(text):
     """ Remove html formatting
@@ -242,9 +245,10 @@ def process_text(text):
     tokenized = word_tokenize(no_html)
     lower = [item.lower() for item in tokenized]
     decontract = [expandContractions(item, c_re=c_re) for item in lower]
-    tagged = nltk.pos_tag(decontract)
-    lemma = lemma_wordnet(tagged)
-    no_num = [re.sub('[0-9]+', '', each) for each in lemma]
+    # lemma = [lemmatize_text(item) for item in decontract]
+    # tagged = nltk.pos_tag(decontract)
+    # lemma = lemma_wordnet(tagged)
+    no_num = [re.sub('[0-9]+', '', each) for each in decontract]
     no_punc = [w for w in no_num if w not in punc]
     no_stop = [w for w in no_punc if w not in stopwords]
     return no_stop
