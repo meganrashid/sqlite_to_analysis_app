@@ -1,51 +1,17 @@
 import pandas as pd
 from bs4 import BeautifulSoup
 from collections import Counter
+
+from nltk.corpus import stopwords, wordnet
 from nltk.tokenize import word_tokenize
-import itertools, string, re, unicodedata
+from nltk.stem import WordNetLemmatizer
+
+import itertools, string, re, unicodedata, nltk
 
 
 
 # Print to verify that the module is being executed
 print("helper_functions.py has been loaded")
-
-def word_count(text):
-    """ counts number of words in a text
-    
-    Args:
-    - text (str): text to count words
-    """
-    return len(str(text).split(' '))
-
-def word_freq(clean_text_list, top_n):
-    """ Count word frequency
-
-    Args:
-    - clean_text_list (list): list of strings
-    - top_n (integer): number to filter top N values
-    """
-    flat = [item for sublist in clean_text_list for item in sublist]
-    with_counts = Counter(flat)
-    top = with_counts.most_common(top_n)
-    word = [each[0] for each in top]
-    num = [each[1] for each in top]
-    return pd.DataFrame([word, num]).T
-
-########################################## text preprocessing #######################################################
-def join_text_columns(df, columns, separator=' '):
-    """
-    Joins text from multiple columns in a DataFrame.
-
-    Args:
-    - df (DF): pandas DataFrame
-    - columns (list): list of column names to join
-    - separator (str): string used to separate joined text (default is a space)
-
-    Returns:
-    - pandas Series containing the joined text
-    """
-    return df[columns].apply(lambda row: separator.join(row.dropna().astype(str)), axis=1)
-
 
 ########################################## contraction dictionary ###################################################
 #Contraction map
@@ -169,3 +135,115 @@ c_dict = {
   "you're": "you are",
   "you've": "you have"
 }
+
+c_re = re.compile('(%s)' % '|'.join(c_dict.keys()))
+
+stopwords = list(set(stopwords.words('english')))
+add_stopwords = ['sep','',' ','say', 's', 'u', 'ap', 'afp', '...', 'n', '\\','"',"'","'s",'us','get','ã¢â‚¬â','new']
+
+punc = list(set(string.punctuation))
+pattern = r"(?u)\b\w\w+\b" 
+
+lemmatizer = WordNetLemmatizer()
+
+###################################### text EDA ##################################################################
+
+def word_count(text):
+    """ counts number of words in a text
+    
+    Args:
+    - text (str): text to count words
+    """
+    return len(str(text).split(' '))
+
+def word_freq(clean_text_list, top_n):
+    """ Count word frequency
+
+    Args:
+    - clean_text_list (list): list of strings
+    - top_n (integer): number to filter top N values
+    """
+    flat = [item for sublist in clean_text_list for item in sublist]
+    with_counts = Counter(flat)
+    top = with_counts.most_common(top_n)
+    word = [each[0] for each in top]
+    num = [each[1] for each in top]
+    return pd.DataFrame([word, num]).T
+
+########################################## text preprocessing #######################################################
+def join_text_columns(df, columns, separator=' '):
+    """
+    Joins text from multiple columns in a DataFrame.
+
+    Args:
+    - df (DF): pandas DataFrame
+    - columns (list): list of column names to join
+    - separator (str): string used to separate joined text (default is a space)
+
+    Returns:
+    - pandas Series containing the joined text
+    """
+    return df[columns].apply(lambda row: separator.join(row.dropna().astype(str)), axis=1)
+
+def remove_html(text):
+    """ Remove html formatting
+
+    Args:
+    - text (str): text to clean
+    """
+    soup = BeautifulSoup(text, "html5lib")
+    tags_del = soup.get_text()
+    uni = unicodedata.normalize("NFKD", tags_del)
+    bracket_del = re.sub(r'\[.*?\]', '  ', uni)
+    apostrphe = re.sub('’', "'", bracket_del)
+    string = apostrphe.replace('\r','  ')
+    string = string.replace('\n','  ')
+    extra_space = re.sub(' +',' ', string)
+    return extra_space
+
+def expandContractions(text, c_re=c_re):
+    def replace(match):
+        return c_dict[match.group(0)]
+    return c_re.sub(replace, text)
+
+#Function to replace the nltk pos tags with the corresponding wordnet pos tag to use the wordnet lemmatizer
+def get_word_net_pos(treebank_tag):
+    if treebank_tag.startswith('J'):
+        return wordnet.ADJ
+    elif treebank_tag.startswith('V'):
+        return wordnet.VERB
+    elif treebank_tag.startswith('N'):
+        return wordnet.NOUN
+    elif treebank_tag.startswith('R'):
+        return wordnet.ADV
+    else:
+        return None
+    
+def lemma_wordnet(tagged_text):
+    final = []
+    for word, tag in tagged_text:
+        wordnet_tag = get_word_net_pos(tag)
+        if wordnet_tag is None:
+            final.append(lemmatizer.lemmatize(word))
+        else:
+            final.append(lemmatizer.lemmatize(word, pos=wordnet_tag))
+    return final
+
+def process_text(text):
+    """ Remove html formatting
+
+    Args:
+    - text (str): text to clean
+    """
+    soup = BeautifulSoup(text, "lxml")
+    tags_del = soup.get_text()
+    no_html = re.sub('<[^>]*>', '', tags_del)
+    tokenized = word_tokenize(no_html)
+    lower = [item.lower() for item in tokenized]
+    decontract = [expandContractions(item, c_re=c_re) for item in lower]
+    tagged = nltk.pos_tag(decontract)
+    lemma = lemma_wordnet(tagged)
+    no_num = [re.sub('[0-9]+', '', each) for each in lemma]
+    no_punc = [w for w in no_num if w not in punc]
+    no_stop = [w for w in no_punc if w not in stopwords]
+    return no_stop
