@@ -143,7 +143,7 @@ add_stopwords = ['sep','say', 's', 'u', 'ap', 'afp', 'n','us','get','new','servi
 stopwords.extend(add_stopwords)
 
 punc = list(set(string.punctuation))
-punc.extend(['\\','\"','',' ','...','ã¢â‚¬â','\'','\'s','-','--',"''",'\``',"’"])
+punc.extend(['\\','\"','',' ','...','ã¢â‚¬â','\'','\'s','-','--',"''",'\``',"’",'\–','·'])
 
 lemmatizer = WordNetLemmatizer()
 
