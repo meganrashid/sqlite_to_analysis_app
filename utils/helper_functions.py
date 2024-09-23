@@ -8,8 +8,6 @@ from nltk.stem import WordNetLemmatizer
 
 import itertools, string, re, unicodedata, nltk
 
-
-
 # Print to verify that the module is being executed
 print("helper_functions.py has been loaded")
 
@@ -136,40 +134,31 @@ c_dict = {
   "you've": "you have"
 }
 
-c_re = re.compile('(%s)' % '|'.join(c_dict.keys()))
+c_re = re.compile('(%s)' % '|'.join(map(re.escape, c_dict.keys())))
 
-stopwords = list(set(stopwords.words('english')))
-add_stopwords = ['sep','say', 's', 'u', 'ap', 'afp', 'n','us','get','new','services','service','help','contact','company','call','view','best','home']
-stopwords.extend(add_stopwords)
+################################### Stopwords and punctuation setup ###########################################
+stopwords = set(stopwords.words('english')).union({
+    'sep', 'say', 's', 'u', 'ap', 'afp', 'n', 'us', 'get', 'new', 'services', 
+    'service', 'help', 'contact', 'company', 'call', 'view', 'best', 'home'
+})
 
-punc = list(set(string.punctuation))
-punc.extend(['\\','\"','',' ','...','ã¢â‚¬â','\'','\'s','-','--',"''",'\``',"’",'\–','·'])
+punc = set(string.punctuation).union({
+    '\\', '\"', '', ' ', '...', 'ã¢â‚¬â', '\'', '\'s', '-', '--', "''", '\``', "’", '\–', '·'
+})
 
 lemmatizer = WordNetLemmatizer()
 
-###################################### text EDA ##################################################################
+###################################### word count ##################################################################
 
 def word_count(text):
-    """ counts number of words in a text
-    
-    Args:
-    - text (str): text to count words
-    """
-    return len(str(text).split(' '))
+    """ Count number of words in the text """
+    return len(text.split())
 
 def word_freq(clean_text_list, top_n):
-    """ Count word frequency
-
-    Args:
-    - clean_text_list (list): list of strings
-    - top_n (integer): number to filter top N values
-    """
-    flat = [item for sublist in clean_text_list for item in sublist]
-    with_counts = Counter(flat)
-    top = with_counts.most_common(top_n)
-    word = [each[0] for each in top]
-    num = [each[1] for each in top]
-    return pd.DataFrame([word, num]).T
+    """ Count word frequency and return top N words """
+    flat = list(itertools.chain.from_iterable(clean_text_list))  # Flatten list of lists
+    most_common_words = Counter(flat).most_common(top_n)
+    return pd.DataFrame(most_common_words, columns=['Word', 'Frequency'])
 
 ########################################## text preprocessing #######################################################
 def join_text_columns(df, columns, separator=' '):
@@ -187,28 +176,25 @@ def join_text_columns(df, columns, separator=' '):
     return df[columns].apply(lambda row: separator.join(row.dropna().astype(str)), axis=1)
 
 def remove_html(text):
-    """ Remove html formatting
+    """ Remove HTML tags and normalize text
 
     Args:
     - text (str): text to clean
     """
     soup = BeautifulSoup(text, "html5lib")
-    tags_del = soup.get_text()
-    uni = unicodedata.normalize("NFKD", tags_del)
-    bracket_del = re.sub(r'\[.*?\]', '  ', uni)
-    apostrphe = re.sub('’', "'", bracket_del)
-    string = apostrphe.replace('\r','  ')
-    string = string.replace('\n','  ')
-    extra_space = re.sub(' +',' ', string)
-    return extra_space
+    clean_text = soup.get_text()
+    clean_text = unicodedata.normalize("NFKD", clean_text)  # Normalize unicode
+    clean_text = re.sub(r'\[.*?\]', ' ', clean_text)  # Remove text inside brackets
+    return re.sub(r'\s+', ' ', clean_text).strip()  # Remove extra spaces
 
-def expandContractions(text, c_re=c_re):
+def expand_contractions(text):
+    """ Expand contractions in the given text """
     def replace(match):
         return c_dict[match.group(0)]
     return c_re.sub(replace, text)
 
-#Function to replace the nltk pos tags with the corresponding wordnet pos tag to use the wordnet lemmatizer
 def get_word_net_pos(treebank_tag):
+    """ Map POS tag to WordNet POS to be used by lemmatizer """
     if treebank_tag.startswith('J'):
         return wordnet.ADJ
     elif treebank_tag.startswith('V'):
@@ -217,38 +203,30 @@ def get_word_net_pos(treebank_tag):
         return wordnet.NOUN
     elif treebank_tag.startswith('R'):
         return wordnet.ADV
-    else:
-        return None
-    
-# def lemma_wordnet(tagged_text):
-#     final = []
-#     for word, tag in tagged_text:
-#         wordnet_tag = get_word_net_pos(tag)
-#         if wordnet_tag is None:
-#             final.append(lemmatizer.lemmatize(word))
-#         else:
-#             final.append(lemmatizer.lemmatize(word, pos=wordnet_tag))
-#     return final
+    return None
 
 def lemmatize_text(text):
     return [lemmatizer.lemmatize(w) for w in word_tokenize(text)]
 
-def process_text(text):
-    """ Remove html formatting
+def lemmatize_with_pos(text):
+    """ Lemmatize words with their POS tag """
+    pos_tagged = nltk.pos_tag(word_tokenize(text))
+    lemmatized = [
+        lemmatizer.lemmatize(word, pos=get_word_net_pos(tag) or wordnet.NOUN)  # Default to NOUN if no POS tag
+        for word, tag in pos_tagged
+    ]
+    return lemmatized
 
-    Args:
-    - text (str): text to clean
-    """
-    soup = BeautifulSoup(text, "lxml")
-    tags_del = soup.get_text()
-    no_html = re.sub('<[^>]*>', '', tags_del)
-    tokenized = word_tokenize(no_html)
-    lower = [item.lower() for item in tokenized]
-    decontract = [expandContractions(item, c_re=c_re) for item in lower]
-    # lemma = [lemmatize_text(item) for item in decontract]
-    # tagged = nltk.pos_tag(decontract)
-    # lemma = lemma_wordnet(tagged)
-    no_num = [re.sub('[0-9]+', '', each) for each in decontract]
-    no_punc = [w for w in no_num if w not in punc]
-    no_stop = [w for w in no_punc if w not in stopwords]
-    return no_stop
+def process_text(text):
+    """ Clean text by removing HTML, expanding contractions, and lemmatizing """
+    text = remove_html(text)
+    text = text.lower()  # Lowercase the text
+    text = expand_contractions(text)
+    
+    # Tokenize, remove punctuation, numbers, and stopwords
+    tokens = word_tokenize(text)
+    tokens = [re.sub(r'\d+', '', word) for word in tokens]  # Remove numbers
+    tokens = [word for word in tokens if word not in punc]  # Remove punctuation
+    tokens = [word for word in tokens if word not in stopwords]  # Remove stopwords
+
+    return lemmatize_with_pos(' '.join(tokens))
