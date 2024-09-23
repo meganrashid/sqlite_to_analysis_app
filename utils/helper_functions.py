@@ -139,11 +139,12 @@ c_re = re.compile('(%s)' % '|'.join(map(re.escape, c_dict.keys())))
 ################################### Stopwords and punctuation setup ###########################################
 stopwords = set(stopwords.words('english')).union({
     'sep', 'say', 's', 'u', 'ap', 'afp', 'n', 'us', 'get', 'new', 'services', 
-    'service', 'help', 'contact', 'company', 'call', 'view', 'best', 'home'
+    'service', 'help', 'contact', 'company', 'call', 'view', 'best', 'home',
+    'search','online','use','make','first','provide','need','needs'
 })
 
 punc = set(string.punctuation).union({
-    '\\', '\"', '', ' ', '...', 'ã¢â‚¬â', '\'', '\'s', '-', '--', "''", '\``', "’", '\–', '·'
+    '\\', '\"', '', ' ', '...', 'ã¢â‚¬â', '\'', '\'s', '-', '--', "''", '\``', "’", '\–', '·','©'
 })
 
 lemmatizer = WordNetLemmatizer()
@@ -229,4 +230,4 @@ def process_text(text):
     tokens = [word for word in tokens if word not in punc]  # Remove punctuation
     tokens = [word for word in tokens if word not in stopwords]  # Remove stopwords
 
-    return lemmatize_with_pos(' '.join(tokens))
+    return tokens
