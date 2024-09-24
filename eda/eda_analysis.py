@@ -1,6 +1,6 @@
-""" EDA Analysis Done in eda.ipynb with markdown comments
-
-This script executes the 
+""" 
+This script executes the EDA Analysis Done in eda.ipynb 
+and saves results to output folder
 """
 import os
 import subprocess
