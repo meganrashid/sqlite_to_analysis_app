@@ -5,3 +5,4 @@ output/*.ipynb
 output/*.pkl
 utils/__pycache__
 model/*.pkl
+*.pkl
