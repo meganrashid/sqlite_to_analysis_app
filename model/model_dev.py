@@ -19,14 +19,27 @@ from sklearn.base import TransformerMixin, BaseEstimator
 
 # read data back in from pickle file created with eda.ipynb
 
+print("""Purpose:
+This model predicts a Company's business category based on the text of their homepage website. 
+
+Hypothesis: 
+The implicit hypothesis is that websites within each category will use distinctive language that can be used to classify them.
+
+Overall process:
+1. Normalize Text (done during eda.ipynb to complete EDA)
+2. Label Encoding
+3. Feature Extraction (TFIDF & BERT)
+4. Model Training
+5. Evaulate best performing model and vectorization method
+      
+For more info on training process, check out model_dev.ipynb""")
+
 # Dynamically get the current working directory
 
 # # get the base directory
 base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-print(f"base directory {base_dir}")
 
 text_path = os.path.abspath(os.path.join(base_dir, 'output','combined_data.pkl'))
-print(f"text path: {text_path}")
 # read data back in 
 df_clean = pd.read_pickle(text_path)
 
