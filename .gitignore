@@ -2,4 +2,4 @@ output/results.md
 data/*.db
 output/*.xlsx
 output/*.ipynb
-output/.*pkl
+output/*.pkl
