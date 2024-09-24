@@ -1,7 +1,7 @@
-import subprocess
 import os
 import sys
 import pandas as pd
+import subprocess
 
 # Construct the absolute path to the utils directory and append it to sys.path
 # sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'utils')))
@@ -22,6 +22,8 @@ base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 # get data path
 db_path = os.path.join(base_dir, 'data', 'combined_data.db')
 
+################################# functions to run scripts and notebooks ###################################
+
 def run_clean_data_script():
     """
     Execute the clean_data.py script located in the scripts folder.
@@ -40,11 +42,29 @@ def run_clean_data_script():
         print(f"Error occurred while running clean_data.py: {e}")
         print(e.stderr)
 
-# Example usage
+def run_notebook(notebook_path, output_notebook_path):
+    """
+    Execute a Jupyter notebook and save the output.
+    
+    Args:
+    - notebook_path: str, path to the notebook to execute.
+    - output_notebook_path: str, path to save the executed notebook.
+    
+    Raises:
+    - CalledProcessError if the subprocess fails.
+    """
+    try:
+        command = f"jupyter nbconvert --to notebook --execute --output {output_notebook_path} {notebook_path}"
+        subprocess.run(command, shell=True, check=True)
+        print(f"Successfully executed: {notebook_path}")
+    except subprocess.CalledProcessError as e:
+        print(f"Error executing {notebook_path}: {e}")
+        raise
+
+######################################### Clean the database ################################################ 
+
 if __name__ == "__main__":
     run_clean_data_script()
-    # After running clean_data.py, you can add further code to generate the report
-
 
 ############################################ SQL QUERIES ####################################################
 # get output directory
@@ -130,3 +150,25 @@ top5_country = '''
 
 db.query_to_excel(conn, output_dir, top5_country, output_filename='top_companies_per_country_total_employees.xlsx')
 
+############################################ Run EDA & Create Text Database for Modeling ####################################################
+
+# If you only want to run the eda.ipynb, you can run this using eda.py
+
+print("Begin EDA --> ... ")
+
+eda_notebook = os.path.join(base_dir, 'eda', 'eda.ipynb')
+eda_output = os.path.join(base_dir, 'output', 'eda_results.ipynb')
+
+# List of notebooks to execute
+notebooks = [
+    (eda_notebook, eda_output)
+]
+
+# Loop through and execute each notebook
+for notebook_path, output_notebook_path in notebooks:
+    if os.path.exists(notebook_path):
+        run_notebook(notebook_path, output_notebook_path)
+    else:
+        print(f"Notebook not found: {notebook_path}")
+
+############################################ Run EDA & Create Text Database for Modeling ####################################################
