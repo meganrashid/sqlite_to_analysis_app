@@ -3,3 +3,4 @@ data/*.db
 output/*.xlsx
 output/*.ipynb
 output/*.pkl
+utils/__pycache__
