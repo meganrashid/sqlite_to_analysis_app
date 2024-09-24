@@ -61,6 +61,24 @@ def run_notebook(notebook_path, output_notebook_path):
         print(f"Error executing {notebook_path}: {e}")
         raise
 
+def run_model_dev_script():
+    """
+    Execute the clean_data.py script located in the scripts folder.
+    """
+    # Get the absolute path to the clean_data.py script
+    model_dev_script = os.path.join(base_dir,'model','model_dev.py')
+    
+    try:
+        # Execute the clean_data.py script using subprocess
+        result = subprocess.run(['python', model_dev_script], check=True, capture_output=True, text=True)
+        
+        # If the script runs successfully, print the output
+        print("clean_data.py script output:")
+        print(result.stdout)
+    except subprocess.CalledProcessError as e:
+        print(f"Error occurred while running clean_data.py: {e}")
+        print(e.stderr)
+
 ######################################### Clean the database ################################################ 
 
 if __name__ == "__main__":
@@ -171,4 +189,7 @@ for notebook_path, output_notebook_path in notebooks:
     else:
         print(f"Notebook not found: {notebook_path}")
 
-############################################ Run EDA & Create Text Database for Modeling ####################################################
+############################################ Create the Model ####################################################
+
+if __name__ == "__main__":
+    run_model_dev_script()
