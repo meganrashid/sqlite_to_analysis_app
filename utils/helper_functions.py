@@ -144,7 +144,7 @@ stopwords = set(stopwords.words('english')).union({
 })
 
 punc = set(string.punctuation).union({
-    '\\', '\"', '', ' ', '...', 'ã¢â‚¬â', '\'', '\'s', '-', '--', "''", '\``', "’", '\–', '·','©'
+    '\\', '\"', '', ' ', '...', 'ã¢â‚¬â', '\'', '\'s', '-', '--', "''", '\``', "’", '\–', '·','©','–'
 })
 
 lemmatizer = WordNetLemmatizer()
