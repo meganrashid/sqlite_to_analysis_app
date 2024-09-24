@@ -22,6 +22,9 @@ base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 # get data path
 db_path = os.path.join(base_dir, 'data', 'combined_data.db')
 
+# output path for files
+output_path = os.path.join(base_dir, 'output')
+
 ################################# functions to run scripts and notebooks ###################################
 
 def run_clean_data_script():
@@ -106,9 +109,8 @@ top_total_query = '''
             ORDER BY 3 desc
             LIMIT 10
         '''
-output_dir = 'C:/Users/megan/OneDrive/Documents/GitHub/sqlite_to_analysis_app/output'
 
-db.query_to_excel(conn, output_dir, top_total_query, output_filename='top_industries_by_total_avg_employees.xlsx')
+db.query_to_excel(conn, output_path, top_total_query, output_filename='top_industries_by_total_avg_employees.xlsx')
 
 
 top_current_query = '''
@@ -123,9 +125,8 @@ top_current_query = '''
             ORDER BY 2 desc
             LIMIT 10
         '''
-output_dir = 'C:/Users/megan/OneDrive/Documents/GitHub/sqlite_to_analysis_app/output'
 
-db.query_to_excel(conn, output_dir, top_current_query, output_filename='top_industries_by_current_avg_employees.xlsx')
+db.query_to_excel(conn, output_path, top_current_query, output_filename='top_industries_by_current_avg_employees.xlsx')
 
 # 2. Idenitify companies in the 'Technology'-like industry that do not have effective homepage_text and have
 # fewer than 100 employees based on data merged from both datasets
@@ -148,7 +149,7 @@ bad_homepage_text = '''
                         and cc.Category like '%technology%'
                     '''
 
-db.query_to_excel(conn, output_dir, bad_homepage_text, output_filename='tech_companies_with_ineffective_homepage_text.xlsx')
+db.query_to_excel(conn, output_path, bad_homepage_text, output_filename='tech_companies_with_ineffective_homepage_text.xlsx')
 
 # 3. Rank companies within each country by their total employee estimate in descending order, showing only companies that rank in the top 5 within their country. 
 top5_country = '''
@@ -166,7 +167,7 @@ top5_country = '''
                 where RowNum <6                       
                 '''
 
-db.query_to_excel(conn, output_dir, top5_country, output_filename='top_companies_per_country_total_employees.xlsx')
+db.query_to_excel(conn, output_path, top5_country, output_filename='top_companies_per_country_total_employees.xlsx')
 
 ############################################ Run EDA & Create Text Database for Modeling ####################################################
 
