@@ -1,0 +1,18 @@
+### Requirements
+- Python 3.x
+- pandas
+- numpy
+- scikit-learn
+- sqlite3
+- time
+- sys
+- os
+- subprocess
+- nltk
+- torch
+- transformers
+- plotly.express
+- pkgutils
+- inspect
+- collections
+- bs4
