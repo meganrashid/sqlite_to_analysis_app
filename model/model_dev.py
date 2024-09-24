@@ -35,11 +35,11 @@ df_sample = df_clean.sample(n=5000)
 
 #Turning the labels into numbers
 label_encoder = LabelEncoder()
-df_clean['Category_encoded'] = label_encoder.fit_transform(df_clean['Category'])
+df_sample['Category_encoded'] = label_encoder.fit_transform(df_sample['Category'])
 
 # split the data into features (X) and labels (y)
-X = df_clean['clean_text_str']
-y = df_clean['Category_encoded']
+X = df_sample['clean_text_str']
+y = df_sample['Category_encoded']
 
 # Train-Test Split
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
@@ -83,7 +83,7 @@ class DistilBERTEmbeddingTransformer(BaseEstimator, TransformerMixin):
 
 # # load precomputed embeddings
 X_train_embeddings2 = np.load(os.path.abspath(os.path.join(base_dir, 'model','X_train_distilbert.npy')))
-X_test_embeddings2 = np.load(os.path.join(base_dir, '..', 'model','X_test_distilbert.npy'))
+X_test_embeddings2 = np.load(os.path.join(base_dir, 'model','X_test_distilbert.npy'))
 
 # Store BERT results
 bert_results = []
