@@ -4,16 +4,6 @@
 ## Overview
 This application reads data from a SQLite database, performs exploratory data analysis (EDA), develops a model, and outputs the results to a markdown file.
 
-### Requirements
-- Python 3.x
-- pandas
-- scikit-learn
-- sqlite3
-- time
-- sys, os
-- subprocess
-- nltk
-
 ### Directory
 ```bash
 sqlite_to_analysis_app/
@@ -92,7 +82,7 @@ sqlite_to_analysis_app/
 ```
 
 ## Inspect the data
-You can follow my thought process and steps to clean the data in the data\database_check.ipynb notebook. 
+You can follow my thought process and steps to clean the data in the data\database_check.ipynb notebook.
 
 ## Task 1: SQL Queries
 This is done while running generate_reports.py. Results of queries are saved to Excel files under the output folder.
@@ -100,5 +90,11 @@ This is done while running generate_reports.py. Results of queries are saved to 
 ## Task 2: Data Integration and Database Insertion
 I rename columns, add indexes, create a new table CompanyMerged and insert results of query into that table in clean_data.py.
 
-## Task 3: EDA
-You can follow my development process in eda\eda.ipynb. The application executes the EDA in eda_analysis.py. 
+## Task 3: EDA & Text Preprocessing
+EDA and text normalization done by running notebook eda.ipynb. Results of notebook saved to output folder.
+
+## Task 4: Model Development
+MODEL_NAME chosen here.
+
+The full development process is outlined in model_dev.ipynb. However, due to the computational expense of that process, only the
+chosen model is trained in model_dev.py.
