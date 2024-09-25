@@ -1,5 +1,8 @@
 # sqlite_to_analysis_app
- This application takes data from a sqlite db and outputs results of query results, EDA and analysis to a markdown file. 
+ This application takes data from a sqlite db and: 
+ 1. outputs results of query results to Excel files
+ 2. Run EDA notebook
+ 3. Creates a Logistic Regression model based on Distilbert embeddings
 
 ## Overview
 This application reads data from a SQLite database, performs exploratory data analysis (EDA), develops a model, and outputs the results to a markdown file.
@@ -94,7 +97,11 @@ I rename columns, add indexes, create a new table CompanyMerged and insert resul
 EDA and text normalization done by running notebook eda.ipynb. Results of notebook saved to output folder.
 
 ## Task 4: Model Development
-MODEL_NAME chosen here.
+Logistic Regression trained on DistilBERT embeddings was chosen. However, the model was trained on 5000 records (dataset contains
+71k) due to machine limitations. 
 
-The full development process is outlined in model_dev.ipynb. However, due to the computational expense of that process, only the
-chosen model is trained in model_dev.py.
+The full development process is outlined in model_dev.ipynb. This application is shipped with precomputed DistilBERT embeddings to support
+faster model training.
+
+## Task 5: Reporting
+Full findings can be found in Report_Findings.md
