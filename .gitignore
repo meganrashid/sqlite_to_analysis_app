@@ -1,8 +1,7 @@
-output/results.md
 data/*.db
 output/*.xlsx
 output/*.ipynb
 output/combined_data.pkl
 utils/__pycache__
 model/*.pkl
-*.pkl
+logistic_dbert_model.pkl
