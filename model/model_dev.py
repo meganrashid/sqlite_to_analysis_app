@@ -39,7 +39,7 @@ For more info on training process, check out model_dev.ipynb""")
 # # get the base directory
 base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 
-text_path = os.path.abspath(os.path.join(base_dir, 'output','combined_data.pkl'))
+text_path = os.path.abspath(os.path.join(base_dir, 'output','sample_data.pkl'))
 
 # read data back in 
 # df_clean = pd.read_pickle(text_path)
