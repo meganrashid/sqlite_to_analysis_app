@@ -105,3 +105,6 @@ faster model training.
 
 ## Task 5: Reporting
 Full findings can be found in Report_Findings.md
+
+Credits:
+Text processing functions found in db_utils optimized from the work done by: https://github.com/robsalgado/personal_data_science_projects/commits?author=robsalgado
