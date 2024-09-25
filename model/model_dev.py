@@ -40,11 +40,13 @@ For more info on training process, check out model_dev.ipynb""")
 base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 
 text_path = os.path.abspath(os.path.join(base_dir, 'output','combined_data.pkl'))
+
 # read data back in 
-df_clean = pd.read_pickle(text_path)
+# df_clean = pd.read_pickle(text_path)
 
 # Get a random sample of 5k rows due to memory constraints
-df_sample = df_clean.sample(n=5000)
+# df_sample = df_clean.sample(n=5000)
+df_sample= pd.read_pickle(text_path)
 
 #Turning the labels into numbers
 label_encoder = LabelEncoder()
