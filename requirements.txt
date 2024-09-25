@@ -16,3 +16,4 @@
 - inspect
 - collections
 - bs4
+- pickle
