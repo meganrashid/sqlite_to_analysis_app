@@ -2,6 +2,7 @@ import sqlite3
 import time
 import pandas as pd
 import os
+import subprocess
 
 
 def connect_to_db(db_path):
@@ -150,3 +151,4 @@ def query_to_excel(conn, output_dir, query, output_filename='query_results.xlsx'
     
     print(f"Query results successfully saved to: {output_path}")
     return output_path
+
