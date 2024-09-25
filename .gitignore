@@ -2,7 +2,7 @@ output/results.md
 data/*.db
 output/*.xlsx
 output/*.ipynb
-output/*.pkl
+output/combined_data.pkl
 utils/__pycache__
 model/*.pkl
 *.pkl
